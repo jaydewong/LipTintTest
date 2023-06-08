@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.example.liptinttest.ml.Model;
 
 import org.tensorflow.lite.DataType;
@@ -52,13 +55,26 @@ public class MainActivity extends AppCompatActivity {
         result = findViewById(R.id.result);
         imageView = findViewById(R.id.imageView);
 
+        //start python
+        if(!Python.isStarted()){
+            Python.start(new AndroidPlatform(this));
+        }
+        Python py = Python.getInstance();
+        PyObject pyobj = py.getModule("script");
+
        uploadAudioBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("audio/*");
-                startActivityForResult(intent, 12);
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                intent.setType("audio/*");
+//                startActivityForResult(intent, 12);
+
+                //Testing python code first
+                PyObject obj = pyobj.callAttr("main");
+                result.setText(obj.toString());
+
+
             }
         });
 
